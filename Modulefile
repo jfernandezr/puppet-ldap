@@ -1,0 +1,11 @@
+name 'jfernandezr-ldap'
+version '0.1.0'
+source 'git://github.com/jfernandezr/puppet-ldap.git'
+author 'Juan Fernandez-Rebollos'
+summary 'Puppet LDAP server module'
+description 'LDAP package installation and configuration, allowing TLS/SSL and master-slave replication'
+project_page 'http://github.com/jfernandezr/puppet-ldap'
+license 'GPL v3'
+
+dependency 'puppetlabs/stdlib', '>= 2.3.3'
+dependency 'jfernandezr/preseed', '>= 0.1.0'

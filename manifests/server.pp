@@ -10,8 +10,9 @@ class ldap::server (
 	$daemon_options = []
 	) {
 	
-	# Require the base LDAP class
+	# Module dependencies
 	require ldap
+	require preseed
 	
 	# Set the configuration values
 	$moduledir = "${::puppet_vardir}/ldap"

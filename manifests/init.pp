@@ -4,7 +4,6 @@ class ldap ($domain, $uri) {
 
 	# Module dependencies
 	require stdlib
-	require preseed
 
 	# Set the specific distribution values
 	$ldapadd = '/usr/bin/ldapadd'
