@@ -28,7 +28,7 @@ node default {
 		deps => 'core,cosine,nis'
 	}
 	
-	# Set the indexes rules
+	# Set the indexes
 	class { 'ldap::server::index':
 		indexes => [
 			'objectClass eq',
@@ -46,7 +46,7 @@ node default {
 			'to dn.base="" by * read',
 			'to * by self write by dn="cn=admin,dc=example,dc=com" write by * read',
 		]
-	} 
+	}
 	
 	# Set the TLS parameters
 	# Note: make sure for the test that the files exist
