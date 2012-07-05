@@ -1,0 +1,16 @@
+slapd	slapd/password1	password	<%= rootPW %>
+slapd	slapd/internal/adminpw	password	<%= rootPW %>	
+slapd	slapd/internal/generated_adminpw	password	<%= rootPW %>		
+slapd	slapd/password2	password	<%= rootPW %>
+slapd	slapd/allow_ldap_v2	boolean	false
+slapd	slapd/password_mismatch	note	
+slapd	slapd/invalid_config	boolean	true
+slapd	shared/organization	string	<%= scope.lookupvar('ldap::domain') %>
+slapd	slapd/upgrade_slapcat_failure	error	
+slapd	slapd/no_configuration	boolean	false
+slapd	slapd/move_old_database	boolean	true
+slapd	slapd/dump_database_destdir	string	/var/backups/slapd-VERSION
+slapd	slapd/purge_database	boolean	false
+slapd	slapd/domain	string	<%= scope.lookupvar('ldap::domain') %>
+slapd	slapd/backend	select	HDB
+slapd	slapd/dump_database	select	when needed

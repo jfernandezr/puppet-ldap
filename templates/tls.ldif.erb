@@ -1,0 +1,15 @@
+# Add the SSL/TLS options
+dn: cn=config
+changetype: modify
+add: olcTLSCACertificateFile
+olcTLSCACertificateFile: <%= ca_certificate_file %>
+-
+add: olcTLSCertificateFile
+olcTLSCertificateFile: <%= certificate_file %>
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: <%= certificate_key_file %>
+-
+add: olcTLSVerifyClient
+olcTLSVerifyClient: allow
+

@@ -1,0 +1,22 @@
+# Load the syncprov module
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: syncprov
+
+# Modify the frontend db to act as replication consumer
+dn: olcDatabase={1}hdb,cn=config
+changetype: modify
+add: olcDbIndex
+olcDbIndex: entryUUID eq
+-
+add: olcSyncRepl
+olcSyncRepl: rid=<%= replica_id %> provider=<%= scope.lookupvar('ldap::uri') %>
+  bindmethod=simple binddn="<%= scope.lookupvar('ldap::server::rootDN') %>"
+  credentials="<%= scope.lookupvar('ldap::server::rootPW') %>"
+  searchbase="<%= scope.lookupvar('ldap::baseDN') %>" logbase="cn=accesslog"
+  logfilter="(&(objectClass=auditWriteObject)(reqResult=0))" schemachecking=on
+  type=refreshAndPersist retry="60 +" syncdata=accesslog
+-
+add: olcUpdateRef
+olcUpdateRef: <%= scope.lookupvar('ldap::uri') %>

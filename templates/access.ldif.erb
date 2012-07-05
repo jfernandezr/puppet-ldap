@@ -1,0 +1,8 @@
+# Remove and set the access rules to the database
+dn: olcDatabase=<%= database %>
+changetype: modify
+delete: olcAccess
+<% rules.each do |rule| %>-
+add: olcAccess
+olcAccess: <%= rule %>
+<% end %>

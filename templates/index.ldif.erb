@@ -1,0 +1,8 @@
+# Remove and set the indexes to the database
+dn: olcDatabase=<%= database %>
+changetype: modify
+delete: olcDbIndex
+<% indexes.each do |index| %>-
+add: olcDbIndex
+olcDbIndex: <%= index %>
+<% end %>
