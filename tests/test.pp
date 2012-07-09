@@ -12,6 +12,9 @@ node default {
 	class { 'ldap::server':
 		rootPW => 'root_password_LDAP',
 		enable_ssl => true,
+		ca_certificate => 'puppet:///files/ldap/ssl/Example_Root_CA.pem',
+		certificate => 'puppet:///files/ldap/ssl/example.pem',
+		certificate_key => 'puppet:///files/ldap/ssl/example.key.pem',
 	}
 	
 	# Add the needed schemas
@@ -46,14 +49,6 @@ node default {
 			'to dn.base="" by * read',
 			'to * by self write by dn="cn=admin,dc=example,dc=com" write by * read',
 		]
-	}
-	
-	# Set the TLS parameters
-	# Note: make sure for the test that the files exist
-	class { 'ldap::server::tls':
-		ssl_ca_certificate => 'puppet:///files/ldap/ssl/Example_Root_CA.pem',
-		ssl_certificate => 'puppet:///files/ldap/ssl/example.pem',
-		ssl_certificate_key => 'puppet:///files/ldap/ssl/example.key.pem',
 	}
 	
 	# Set the server as a sync provider

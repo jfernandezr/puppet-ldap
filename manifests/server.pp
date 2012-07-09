@@ -1,13 +1,16 @@
 # Class: ldap::server.pp
 #
 class ldap::server (
-	$rootDN = "cn=admin,${ldap::baseDN}",
 	$rootPW,
+	$rootDN = "cn=admin,${ldap::baseDN}",
 	$user = 'openldap',
 	$group = 'openldap',
-	$enable_ssl = false,
 	$services = ['ldap:///', 'ldapi:///'],
-	$daemon_options = []
+	$daemon_options = [],
+	$enable_ssl = false,
+	$ca_certificate = false,
+	$certificate = false,
+	$certificate_key = false,
 	) {
 	
 	# Module dependencies
@@ -22,48 +25,58 @@ class ldap::server (
 	
 	# Install the preseed packages
 	preseed::package { 'slapd':
-			ensure => installed,
-			content => template('ldap/slapd.preseed.erb'),
+		ensure => installed,
+		content => template('ldap/slapd.preseed.erb'),
 	}
 	
 	# Run the server
-	service {
-		'slapd':
-			ensure => running,
-			require => Package['slapd'],
+	service { 'slapd':
+		ensure => running,
+		require => Package['slapd'],
 	}
 	
-	# Set the default configuration
+	# Setup environment
+	
+	# Create the module vardir
+	file { $moduledir :
+		ensure => directory,
+		owner => 'root',
+		group => 'root',
+		mode => '0750',
+	}
+
+	# Upload the conversion script for the schemas
+	file { "${moduledir}/convertschema.sh":
+		owner => 'root',
+		group => 'root',
+		mode => '0750',
+		source => 'puppet:///modules/ldap/convertschema.sh',
+		require => File[$moduledir],
+	}
+	
+	# SSL/TLS configuration
+	
+	# Check if the certificate is set
+	if ($certificate) {
+		class { 'ldap::server::tls':
+			ca_certificate => $ca_certificate,
+			certificate => $certificate,
+			certificate_key => $certificate_key,
+		}
+	}
+	
+	# Enable SSL (note this just enables port 636)
 	if ($enable_ssl) {
 		$ssl_services = ['ldaps:///']
 		$server_services = split(inline_template("<%= (services+ssl_services).join(',') %>"),',')
 	} else {
 		$server_services = $services
 	}
-	
 	file {
 		'/etc/default/slapd':
 			content => template('ldap/etc.default.slapd.erb'),
 			notify => Service['slapd'],
 	}
 	
-	# Create the module vardir
-	file {
-		$moduledir :
-			ensure => directory,
-			owner => 'root',
-			group => 'root',
-			mode => '0750',
-	}
-
-	# Upload the conversion script
-	file {
-		"${moduledir}/convertschema.sh":
-			owner => 'root',
-			group => 'root',
-			mode => '0750',
-			source => 'puppet:///modules/ldap/convertschema.sh',
-			require => File[$moduledir],
-	}
 }
 

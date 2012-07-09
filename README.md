@@ -24,32 +24,18 @@ Instantiating the server
 ------------------------
 
 Once the LDAP domain is defined, we can instantiate a basic server with the `ldap::server`
-class. The `enable_ssl` parameter indicates if it will listen to the SSL port but does
-not configure the certificates. The certificates are configured in the `ldap::server::tls`
-class. 
+class. The `enable_ssl` parameter indicates if it will listen to the SSL port, and requires
+the certificates being set. The certificates can be set without SSL, as they can be used
+with a TLS connection on the standard port.
 
 <pre>
 # Instantiate the server
 class { 'ldap::server':
 	rootPW => 'root_password_LDAP',
 	enable_ssl => true,
-}
-</pre>
-
-
-Setting SSL/TLS certificates
-----------------------------
-
-If we want to use SSL or TLS, we need to provide the server with certificates. This is done
-defining the `ldap::server::tls` class, providing the Root CA certificate, the server
-certificate and the server certificate key.
-
-<pre>
-# Set the TLS parameters
-class { 'ldap::server::tls':
-	ssl_ca_certificate => 'puppet:///files/ldap/ssl/Example_Root_CA.pem',
-	ssl_certificate => 'puppet:///files/ldap/ssl/example.pem',
-	ssl_certificate_key => 'puppet:///files/ldap/ssl/example.key.pem',
+	ca_certificate => 'puppet:///files/ldap/ssl/Example_Root_CA.pem',
+	certificate => 'puppet:///files/ldap/ssl/example.pem',
+	certificate_key => 'puppet:///files/ldap/ssl/example.key.pem',
 }
 </pre>
 
